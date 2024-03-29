@@ -1,1 +1,1 @@
-# News-Application-NextJS-React-Tailwind
+# News-Application-NextJS-ReactJS-Tailwind
