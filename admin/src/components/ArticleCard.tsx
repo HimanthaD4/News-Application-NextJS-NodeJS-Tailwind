@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
-import Image from 'next/image'; // Import Image from next/image
+import Image from 'next/image';
+import Swal from 'sweetalert2';
 
 interface Article {
   _id: string;
@@ -39,7 +40,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         >
           {description}
         </div>
-        {description.length > 200 && (
+        {description.length > 660 && (
           <button
             className="text-blue-500 hover:underline ml-1"
             onClick={() => toggleDescription(id)}
@@ -49,6 +50,27 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         )}
       </>
     );
+  };
+
+  const confirmDelete = (id: string) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this article!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete(id);
+        Swal.fire(
+          'Deleted!',
+          'Your article has been deleted.',
+          'success'
+        );
+      }
+    });
   };
 
   return (
@@ -88,7 +110,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             <FaEdit />
           </button> 
           <button
-            onClick={() => handleDelete(article._id)}
+            onClick={() => confirmDelete(article._id)} // Call confirmDelete instead of handleDelete
             className="text-gray-500 hover:text-red-600"
           >
             <FaTrashAlt />

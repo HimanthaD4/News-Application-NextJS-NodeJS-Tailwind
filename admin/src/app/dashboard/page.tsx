@@ -1,81 +1,56 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { FaTrashAlt, FaEdit, FaTimes } from 'react-icons/fa';
-import ArticleCard from "../../components/ArticleCard";
-import { baseURL } from "@/utils/constant";
-import SimpleMDE from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
+"use client"
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Swal from 'sweetalert2';
+import ArticleCard from '../../components/ArticleCard';
+import { baseURL } from '@/utils/constant';
+import SimpleMDE from 'react-simplemde-editor';
+import 'easymde/dist/easymde.min.css';
+import Sidebar from '../../components/Sidebar';
 
-// Define interface for Article
-interface Article {
-  _id: string;
-  articleHead: string;
-  articleDescription: string;
-  image: {
-    contentType: string;
-    data: string;
-  };
-  createdAt: string;
-}
-
-// Define Dashboard component
-const Dashboard: React.FC = () => {
-  // Define state variables
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [expandedArticle, setExpandedArticle] = useState<{ [key: string]: boolean }>({});
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+const Dashboard = () => {
+  const [articles, setArticles] = useState([]);
+  const [expandedArticle, setExpandedArticle] = useState({});
+  const [selectedArticle, setSelectedArticle] = useState(null);
   const [updatedTitle, setUpdatedTitle] = useState("");
   const [updatedDescription, setUpdatedDescription] = useState("");
-  const [updatedImage, setUpdatedImage] = useState<File | null>(null);
-  const router = useRouter();
+  const [updatedImage, setUpdatedImage] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Fetch articles on component mount
   useEffect(() => {
-    axios
-      .get<Article[]>(`${baseURL}/articles`)
-      .then((res) => {
+    const fetchArticles = async () => {
+      try {
+        const res = await axios.get(`${baseURL}/articles`);
         setArticles(res.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
           text: 'Failed to fetch articles!',
         });
-      });
+      }
+    };
+    fetchArticles();
   }, []);
 
-  // Handle article deletion
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id) => {
     try {
       await axios.delete(`${baseURL}/articles/${id}`);
       setArticles(articles.filter((article) => article._id !== id));
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Article deleted successfully',
-      });
+      Swal.fire('Success', 'Article deleted successfully', 'success');
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Failed to delete article!',
-      });
+      Swal.fire('Error', 'Failed to delete article!', 'error');
     }
   };
 
-  // Toggle article description visibility
-  const toggleDescription = (id: string) => {
+  const toggleDescription = (id) => {
     setExpandedArticle(prevState => ({
       ...prevState,
       [id]: !prevState[id]
     }));
   };
 
-  // Handle article update
-  const handleUpdate = (id: string) => {
+  const handleUpdate = (id) => {
     const article = articles.find((article) => article._id === id);
     if (article) {
       setSelectedArticle(article);
@@ -84,7 +59,6 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Close modal
   const handleCloseModal = () => {
     setSelectedArticle(null);
     setUpdatedTitle("");
@@ -92,31 +66,23 @@ const Dashboard: React.FC = () => {
     setUpdatedImage(null);
   };
 
-  // Handle title change
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleChange = (e) => {
     setUpdatedTitle(e.target.value);
   };
 
-  // Handle description change
-  const handleDescriptionChange = (value: string) => {
+  const handleDescriptionChange = (value) => {
     setUpdatedDescription(value);
   };
 
-  // Handle image change
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
       setUpdatedImage(e.target.files[0]);
     }
   };
 
-  // Handle article update submission
   const handleArticleUpdate = async () => {
     if (!selectedArticle || !updatedTitle || !updatedDescription) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Title and Description cannot be empty!',
-      });
+      Swal.fire('Error', 'Title and Description cannot be empty!', 'error');
       return;
     }
     const formData = new FormData();
@@ -125,95 +91,70 @@ const Dashboard: React.FC = () => {
     if (updatedImage) {
       formData.append("image", updatedImage);
     }
+
     try {
       const response = await axios.put(`${baseURL}/articles/${selectedArticle._id}`, formData);
       const updatedArticle = response.data;
-      // Update the article list with the updated article
       setArticles(articles.map(article => article._id === updatedArticle._id ? updatedArticle : article));
-      setSelectedArticle(null);
-      setUpdatedTitle("");
-      setUpdatedDescription("");
-      setUpdatedImage(null);
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Article updated successfully',
-      });
+      handleCloseModal();
+      Swal.fire('Success', 'Article updated successfully', 'success');
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Failed to update article!',
-      });
+      Swal.fire('Error', 'Failed to update article!', 'error');
     }
   };
 
-  // Handle save changes
-  const handleSaveChanges = () => {
-    handleArticleUpdate();
-  };
-
   return (
-    <div className="bg-white min-h-screen py-8 px-4 sm:px-12 md:px-24 lg:px-32 xl:px-40">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-semibold text-center mb-8">Article Reading Page</h1>
-        
+    <div className='flex'>
+      {isSidebarOpen && <Sidebar />}
+      <div className={`flex-grow bg-gray-100 min-h-screen py-8 px-4 sm:px-12 ${isSidebarOpen ? 'md:ml-64' : ''}`}>
         {articles.map((article) => (
           <ArticleCard
             key={article._id}
             article={article}
-            handleUpdate={handleUpdate}
-            handleDelete={handleDelete}
-            toggleDescription={toggleDescription}
+            handleUpdate={() => handleUpdate(article._id)}
+            handleDelete={() => handleDelete(article._id)}
+            toggleDescription={() => toggleDescription(article._id)}
             isExpanded={expandedArticle[article._id] || false}
           />
         ))}
-      </div>
-
-      {selectedArticle && (
-        <div className="fixed inset-0 flex items-center justify-center z-20">
-          <div className="fixed inset-0 bg-black bg-opacity-50"></div>
-          
-          <div className="bg-white rounded-lg overflow-hidden z-10 w-full max-w-md p-4">
-            <div className="flex justify-between items-center mb-4">
+        {selectedArticle && (
+          <div className='fixed inset-0 flex items-center justify-center z-20'>
+            <div className='fixed inset-0 bg-black bg-opacity-50'></div>
+            <div className='bg-white rounded-lg overflow-hidden z-10 w-full max-w-md p-4'>
               <input
-                type="text"
+                type='text'
                 value={updatedTitle}
                 onChange={handleTitleChange}
-                className="text-lg font-semibold outline-none flex-1"
-                placeholder="Enter article title"
+                className='text-lg font-semibold outline-none flex-1'
+                placeholder='Enter article title'
               />
-              <FaTimes onClick={handleCloseModal} className="text-gray-500 cursor-pointer" />
-            </div>
-            <img
-              src={`data:${selectedArticle.image.contentType};base64,${Buffer.from(selectedArticle.image.data).toString('base64')}`}
-              alt="Article Image"
-              className="w-full h-40 object-cover mb-4"
-            />
-            <input type="file" onChange={handleImageChange} accept="image/*" className="mb-4" />
-          
-          
-            {typeof window !== 'undefined' && (
-              <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+              {selectedArticle.image && (
+                <img
+                  src={`data:${selectedArticle.image.contentType};base64,${Buffer.from(selectedArticle.image.data).toString('base64')}`}
+                  alt='Article'
+                  className='w-full h-40 object-cover mb-4'
+                />
+              )}
+              <input type='file' onChange={handleImageChange} accept='image/*' className='mb-4' />
+              <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
                 <SimpleMDE
                   value={updatedDescription}
                   onChange={handleDescriptionChange}
                 />
               </div>
-            )}
-
-            <div className="flex justify-between items-center mt-4">
-              <div className="text-gray-500 text-sm">
-                {new Date(selectedArticle.createdAt).toLocaleDateString()}{" "}
-                {new Date(selectedArticle.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              <div className='flex justify-between items-center mt-4'>
+                <div className='text-gray-500 text-sm'>
+                  {new Date(selectedArticle.createdAt).toLocaleDateString()}{" "}
+                  {new Date(selectedArticle.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+                <button onClick={handleArticleUpdate} className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'>
+                  Save Changes
+                </button>
               </div>
-              <button onClick={handleSaveChanges} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                Save Changes
-              </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

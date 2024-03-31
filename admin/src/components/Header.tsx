@@ -1,34 +1,25 @@
-// Header.tsx
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+// import React from "react";
 
-interface HeaderProps {
-  adminName: string;
-  onLogOut: () => void;
-}
+// interface HeaderProps {
+//   adminName: string;
+//   onLogOut: () => void;
+// }
 
-const Header: React.FC<HeaderProps> = ({ adminName, onLogOut }) => {
-  return (
-    <header className="bg-accentDark text-white py-4">
-      <div className="container mx-auto flex justify-between items-center px-4">
-        <div className="flex items-center">
-          <FaUserCircle className="text-xl mr-2" />
-          <div>
-            <p className="font-semibold"> Welcome {adminName} !</p>
-          </div>
-        </div>
-        <button
-          className="bg-accentDark hover:bg-accentDark text-white px-4 py-2 rounded-full flex items-center"
-          onClick={onLogOut}
-        >
-          <FaSignOutAlt className="mr-2" />
-          Logout
-        </button>
-      </div>
-    </header>
-  );
-};
+// const Header: React.FC<HeaderProps> = ({ adminName, onLogOut }) => {
+//   return (
+//     <header className="bg-gray-200 text-gray-600 py-4 px-8 flex justify-between items-center fixed top-0 left-0 right-0 z-10 shadow-lg">
+//       <h1 className="text-xl font-semibold">Dashboard</h1>
+//       <div className="flex items-center">
+//         <span className="hidden sm:block mr-4 text-sm font-medium">Welcome, {adminName}</span>
+//         <button
+//           onClick={onLogOut}
+//           className="bg-transparent hover:bg-gray-300 text-gray-600 font-semibold hover:text-gray-700 py-2 px-4 border border-gray-400 hover:border-transparent rounded transition-colors duration-200 ease-in-out"
+//         >
+//           Logout
+//         </button>
+//       </div>
+//     </header>
+//   );
+// };
 
-export default Header;
+// export default Header;

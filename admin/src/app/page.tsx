@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { isLogin, logOut } from "@/utils/auth";
 import Dashboard from "@/app/dashboard/page";
-import Header from "../components/Header"; // Assuming the path to Header component is correct
+// import Header from "../components/Header"; // Assuming the path to Header component is correct
+
 
 interface User {
   name: string;
@@ -38,7 +39,8 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <Header adminName={admin.name} onLogOut={handleLogOut} />
+      {/* <Header adminName={admin.name} onLogOut={handleLogOut} /> */}
+
       <Dashboard />
     </div>
   );
