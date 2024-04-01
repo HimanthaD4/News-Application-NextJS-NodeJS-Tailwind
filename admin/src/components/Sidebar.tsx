@@ -14,6 +14,12 @@ import { FaRegComments } from 'react-icons/fa';
 import { BiMessageSquareDots } from 'react-icons/bi';
 import Link from 'next/link';
 
+
+interface HeaderProps {
+  adminName: string;
+  onLogOut: () => void;
+}
+
 function Sidebar() {
   const Logo = () => (
     <div className="flex-shrink-0">
@@ -107,9 +113,14 @@ function Sidebar() {
             <div className="my-4">
               <div className="flex mb-2 justify-start items-center gap-4 pl-5 border border-gray-200 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                 <MdOutlineLogout className="text-2xl text-gray-600 group-hover:text-white " />
-                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
+                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold "  onClick={onLogOut}>
                   Logout
                 </h3>
+
+
+
+
+       
               </div>
             </div>
           </div>
