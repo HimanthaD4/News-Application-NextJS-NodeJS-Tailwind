@@ -1,11 +1,13 @@
 "use client"
-import React, { useState, useRef } from 'react';
-import axios from 'axios'; // Make sure to install axios with npm install axios
-import Sidebar from '../../components/Sidebar';
+import React, { useState } from 'react';
+import axios from 'axios'; 
+import Sidebar from '@/components/Admin/Sidebar';
 import { MdAddAPhoto } from 'react-icons/md';
 import Swal from 'sweetalert2';
+import Header from '@/components/Admin/Header';
+import auth from '@/utils/withAuth';
 
-const AddArticles = () => {
+const Add = () => {
   const [articleHead, setArticleHead] = useState('');
   const [articleDescription, setArticleDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
@@ -32,6 +34,15 @@ const AddArticles = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Validation
+    if (!articleHead || !articleDescription || !selectedImage) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'All fields are required',
+      });
+      return;
+    }
     setUploading(true);
   
     const formData = new FormData();
@@ -57,20 +68,27 @@ const AddArticles = () => {
     } catch (error) {
       console.error(error);
       setUploading(false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to add article. Please try again later.',
+      });
     }
   };
 
   return (
-    <div className="flex">
+    <div className="bg-gray-100 min-h-screen">
+      <Header />
       <Sidebar />
-      <div className="flex-grow bg-gray-100 min-h-screen py-8 px-4 sm:px-12 md:ml-64">
+     
+      <div className="ml-64 px-4 py-24"> 
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-semibold mb-8"></h1>
+         
           <div className="bg-white rounded-lg shadow-lg p-6">
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="flex flex-col">
                 <label htmlFor="title" className="text-lg font-medium text-gray-800">Title</label>
-                <textarea id="title" name="title" rows="1" className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring focus:border-accent placeholder-gray-500" value={articleHead} onChange={handleArticleHeadChange}></textarea>
+                <input id="title" name="title" type="text" className="border border-gray-300 rounded-md px-4 py-3" value={articleHead} onChange={handleArticleHeadChange} />
               </div>
 
               <div className="flex flex-col">
@@ -102,7 +120,7 @@ const AddArticles = () => {
 
               <div className="flex flex-col">
                 <label htmlFor="content" className="text-lg font-medium text-gray-800">Content</label>
-                <textarea id="content" name="content" rows="6" className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring focus:border-accent placeholder-gray-500" value={articleDescription} onChange={handleArticleDescriptionChange}></textarea>
+                <textarea id="content" name="content" rows="6" className="border border-gray-300 rounded-md px-4 py-3" value={articleDescription} onChange={handleArticleDescriptionChange}></textarea>
               </div>
 
               <button type="submit" className="bg-[#FA2E56] text-white px-6 py-3 rounded-md hover:bg-accent-dark transition duration-300" disabled={uploading}>
@@ -116,4 +134,4 @@ const AddArticles = () => {
   );
 };
 
-export default AddArticles;
+export default auth(Add);

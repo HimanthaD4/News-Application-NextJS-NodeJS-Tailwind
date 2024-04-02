@@ -4,10 +4,13 @@
 
 @layer components {
   .icon__wrapper {
-    @apply w-[50px] h-[50px] border-2 border-gray-300 rounded-full grid place-items-center text-[20px] cursor-pointer hover:border-accent;
+    @apply w-[50px] h-[50px] border-2 border-gray-300 rounded-full grid place-items-center text-[20px] cursor-pointer hover:border-neutral-600;
   }
   .input__style {
-    @apply bg-[#f4f8f7] outline-accent px-4 py-2;
+    @apply bg-[#f4f8f7] outline-neutral-600 px-4 py-2;
+  }
+  .input__style_manage_admins {
+    @apply bg-[#ffffff] outline-neutral-600 px-4 py-2;
   }
 }
 

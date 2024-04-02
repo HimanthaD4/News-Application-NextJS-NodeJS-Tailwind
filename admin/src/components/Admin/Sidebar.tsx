@@ -12,13 +12,9 @@ import {
 import { CgProfile } from 'react-icons/cg';
 import { FaRegComments } from 'react-icons/fa';
 import { BiMessageSquareDots } from 'react-icons/bi';
+import { HiOutlineChartBar } from 'react-icons/hi'; 
+import { AiOutlineUsergroupAdd } from 'react-icons/ai'; 
 import Link from 'next/link';
-
-
-interface HeaderProps {
-  adminName: string;
-  onLogOut: () => void;
-}
 
 function Sidebar() {
   const Logo = () => (
@@ -38,12 +34,12 @@ function Sidebar() {
             <div className="flex items-center justify-start mb-3">
               
               <Logo />
-              <h2 className="text-base ml-4 cursor-pointer font-bold text-blue-900 border-b border-gray-100 pb-4">
+              <h2 className="text-base ml-4 cursor-pointer font-bold text-zinc-950 border-b border-gray-100 pb-4">
                  Dashboard
               </h2>
             </div>
             <div className="my-4 border-b border-gray-100 pb-4">
-              <Link href="/dashboard" passHref>
+              <Link href="/admin/dashboard" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <MdOutlineSpaceDashboard className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -51,7 +47,7 @@ function Sidebar() {
                   </h3>
                 </div>
               </Link>
-              <Link href="/add" passHref>
+              <Link href="/admin/add-article" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <MdOutlineAddCircle className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -59,7 +55,7 @@ function Sidebar() {
                   </h3>
                 </div>
               </Link>
-              <Link href="/categories" passHref>
+              <Link href="#" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <MdOutlineCategory className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -67,7 +63,7 @@ function Sidebar() {
                   </h3>
                 </div>
               </Link>
-              <Link href="/comments" passHref>
+              <Link href="#" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <FaRegComments className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -75,15 +71,16 @@ function Sidebar() {
                   </h3>
                 </div>
               </Link>
-              <Link href="/analytics" passHref>
+
+              <Link href="#" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
-                  <BiMessageSquareDots className="text-2xl text-gray-600 group-hover:text-white " />
+                  <HiOutlineChartBar className="text-2xl text-gray-600 group-hover:text-white " /> {/* Added HiOutlineChartBar */}
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
                     Analytics
                   </h3>
                 </div>
               </Link>
-              <Link href="/messages" passHref>
+              <Link href="#" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <BiMessageSquareDots className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -91,7 +88,7 @@ function Sidebar() {
                   </h3>
                 </div>
               </Link>
-              <Link href="/profile" passHref>
+              <Link href="#" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <CgProfile className="text-2xl text-gray-600 group-hover:text-white " />
                   <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
@@ -99,8 +96,16 @@ function Sidebar() {
                   </h3>
                 </div>
               </Link>
+              <Link href="/admin/manage-admins" passHref>
+                <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
+                  <AiOutlineUsergroupAdd className="text-2xl text-gray-600 group-hover:text-white " /> {/* Changed to AiOutlineUsergroupAdd */}
+                  <h3 className="text-base text-gray-800 group-hover:text-white font-semibold ">
+                    Manage Admins
+                  </h3>
+                </div>
+              </Link>
             </div>
-            <div className="my-4 border-b border-gray-100 pb-4">
+            <div className="my-4">
               <Link href="/settings" passHref>
                 <div className="flex mb-2 justify-start items-center gap-4 pl-5 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
                   <MdOutlineSettings className="text-2xl text-gray-600 group-hover:text-white " />
@@ -109,19 +114,6 @@ function Sidebar() {
                   </h3>
                 </div>
               </Link>
-            </div>
-            <div className="my-4">
-              <div className="flex mb-2 justify-start items-center gap-4 pl-5 border border-gray-200 hover:bg-[#FA2E56] p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto">
-                <MdOutlineLogout className="text-2xl text-gray-600 group-hover:text-white " />
-                <h3 className="text-base text-gray-800 group-hover:text-white font-semibold "  onClick={onLogOut}>
-                  Logout
-                </h3>
-
-
-
-
-       
-              </div>
             </div>
           </div>
         </div>

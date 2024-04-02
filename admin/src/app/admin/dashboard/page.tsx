@@ -2,20 +2,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import ArticleCard from '../../components/ArticleCard';
+import ArticleCard from '@/components/Admin/ArticleCard';
 import { baseURL } from '@/utils/constant';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import Sidebar from '../../components/Sidebar';
+import Header from '@/components/Admin/Header';
+import Sidebar from '@/components/Admin/Sidebar';
+import auth from '@/utils/withAuth';
 
-const Dashboard = () => {
+const Admin = () => {
   const [articles, setArticles] = useState([]);
   const [expandedArticle, setExpandedArticle] = useState({});
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [updatedTitle, setUpdatedTitle] = useState("");
   const [updatedDescription, setUpdatedDescription] = useState("");
   const [updatedImage, setUpdatedImage] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen] = useState(true);
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -104,9 +106,10 @@ const Dashboard = () => {
   };
 
   return (
-    <div className='flex'>
+    <div className="bg-gray-100 min-h-screen">
+      <Header />
       {isSidebarOpen && <Sidebar />}
-      <div className={`flex-grow bg-gray-100 min-h-screen py-8 px-4 sm:px-12 ${isSidebarOpen ? 'md:ml-64' : ''}`}>
+      <div className="ml-64 px-4 py-24"> 
         {articles.map((article) => (
           <ArticleCard
             key={article._id}
@@ -121,6 +124,11 @@ const Dashboard = () => {
           <div className='fixed inset-0 flex items-center justify-center z-20'>
             <div className='fixed inset-0 bg-black bg-opacity-50'></div>
             <div className='bg-white rounded-lg overflow-hidden z-10 w-full max-w-md p-4'>
+              <button onClick={handleCloseModal} className="absolute top-0 right-0 m-2 text-gray-600 hover:text-gray-800 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
               <input
                 type='text'
                 value={updatedTitle}
@@ -147,7 +155,10 @@ const Dashboard = () => {
                   {new Date(selectedArticle.createdAt).toLocaleDateString()}{" "}
                   {new Date(selectedArticle.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
-                <button onClick={handleArticleUpdate} className='bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'>
+                <button onClick={handleCloseModal} className='bg-[#000000] text-white px-4 py-2 rounded-md hover:bg-red-600'>
+                  Cancel
+                </button>
+                <button onClick={handleArticleUpdate} className='bg-[#FA2E56] text-white px-4 py-2 rounded-md hover:bg-#FA2E56'>
                   Save Changes
                 </button>
               </div>
@@ -159,4 +170,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default auth(Admin);

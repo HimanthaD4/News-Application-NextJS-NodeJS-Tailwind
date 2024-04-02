@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { baseURL } from '@/utils/constant';
 import Image from 'next/image';
 
-const AddArticles = () => {
+const User = () => {
   const [articles, setArticles] = useState([]);
   const [expandedArticle, setExpandedArticle] = useState({});
 
@@ -94,4 +94,4 @@ const AddArticles = () => {
   );
 };
 
-export default AddArticles;
+export default User;
