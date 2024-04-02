@@ -1,11 +1,11 @@
 "use client"
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Header from "@/components/Admin/Header";
 import Sidebar from "@/components/Admin/Sidebar";
 import { baseURL } from "@/utils/constant";
-import auth from '@/utils/withAuth';
+import auth from "@/utils/withAuth";
 
 const ManageAdmins = () => {
   const [form, setForm] = useState({
@@ -15,7 +15,7 @@ const ManageAdmins = () => {
     confirmPassword: ""
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password || !form.confirmPassword) {
       Swal.fire("Missing Fields", "Please fill in all fields.", "error");
@@ -55,7 +55,7 @@ const ManageAdmins = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 

@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 import Image from 'next/image';
@@ -84,8 +85,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
         </div>
         <hr className="my-4" />
-        <div className="flex -mx-4">
-          <div className="flex-none px-4" style={{ width: '250px' }}>
+        <div className="flex flex-col md:flex-row">
+          <div className="md:flex-none mx-auto md:mx-0 md:mr-4" style={{ width: '250px' }}>
             {article.image && (
               <Image
                 src={`data:${article.image.contentType};base64,${Buffer.from(article.image.data).toString('base64')}`}
@@ -95,8 +96,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               />
             )}
           </div>
-          <div className="px-4 flex" >
-            <div className="text-gray-700" >
+          <div className="mt-4 md:mt-0 md:flex-1">
+            <div className="text-gray-700">
               {renderDescription(article.articleDescription, article._id)}
             </div>
           </div>
@@ -110,7 +111,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             <FaEdit />
           </button> 
           <button
-            onClick={() => confirmDelete(article._id)} // Call confirmDelete instead of handleDelete
+            onClick={() => confirmDelete(article._id)}
             className="text-gray-500 hover:text-red-600"
           >
             <FaTrashAlt />

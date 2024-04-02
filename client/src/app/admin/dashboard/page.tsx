@@ -9,14 +9,15 @@ import 'easymde/dist/easymde.min.css';
 import Header from '@/components/Admin/Header';
 import Sidebar from '@/components/Admin/Sidebar';
 import auth from '@/utils/withAuth';
+import Image from 'next/image'; 
 
-const Admin = () => {
-  const [articles, setArticles] = useState([]);
-  const [expandedArticle, setExpandedArticle] = useState({});
-  const [selectedArticle, setSelectedArticle] = useState(null);
-  const [updatedTitle, setUpdatedTitle] = useState("");
-  const [updatedDescription, setUpdatedDescription] = useState("");
-  const [updatedImage, setUpdatedImage] = useState(null);
+const Dashboard = () => {
+  const [articles, setArticles] = useState<any[]>([]);
+  const [expandedArticle, setExpandedArticle] = useState<{[key: string]: boolean}>({});
+  const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
+  const [updatedTitle, setUpdatedTitle] = useState<string>("");
+  const [updatedDescription, setUpdatedDescription] = useState<string>("");
+  const [updatedImage, setUpdatedImage] = useState<File | null>(null);
   const [isSidebarOpen] = useState(true);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const Admin = () => {
     fetchArticles();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     try {
       await axios.delete(`${baseURL}/articles/${id}`);
       setArticles(articles.filter((article) => article._id !== id));
@@ -45,14 +46,14 @@ const Admin = () => {
     }
   };
 
-  const toggleDescription = (id) => {
+  const toggleDescription = (id: string) => {
     setExpandedArticle(prevState => ({
       ...prevState,
       [id]: !prevState[id]
     }));
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = (id: string) => {
     const article = articles.find((article) => article._id === id);
     if (article) {
       setSelectedArticle(article);
@@ -68,15 +69,15 @@ const Admin = () => {
     setUpdatedImage(null);
   };
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUpdatedTitle(e.target.value);
   };
 
-  const handleDescriptionChange = (value) => {
+  const handleDescriptionChange = (value: string) => {
     setUpdatedDescription(value);
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setUpdatedImage(e.target.files[0]);
     }
@@ -109,7 +110,7 @@ const Admin = () => {
     <div className="bg-gray-100 min-h-screen">
       <Header />
       {isSidebarOpen && <Sidebar />}
-      <div className="ml-64 px-4 py-24"> 
+      <div className="ml-0 md:ml-64 px-4 py-8 md:py-24">
         {articles.map((article) => (
           <ArticleCard
             key={article._id}
@@ -137,13 +138,22 @@ const Admin = () => {
                 placeholder='Enter article title'
               />
               {selectedArticle.image && (
-                <img
-                  src={`data:${selectedArticle.image.contentType};base64,${Buffer.from(selectedArticle.image.data).toString('base64')}`}
-                  alt='Article'
-                  className='w-full h-40 object-cover mb-4'
-                />
+                <div className="relative w-full h-40 mb-4">
+                  <Image
+                    src={`data:${selectedArticle.image.contentType};base64,${Buffer.from(selectedArticle.image.data).toString('base64')}`}
+                    alt='Article'
+                    layout="fill"
+                    objectFit="cover"
+                    className='rounded-lg'
+                  />
+                </div>
               )}
-              <input type='file' onChange={handleImageChange} accept='image/*' className='mb-4' />
+              <div className='mt-2 mb-4'>
+                <label htmlFor="imageUpload" className='cursor-pointer bg-[#FA2E56] text-white py-2 px-4 rounded-md hover:bg-[#D8345F]'>
+                  Upload Image
+                </label>
+                <input type='file' id="imageUpload" onChange={handleImageChange} accept='image/*' className='hidden' />
+              </div>
               <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
                 <SimpleMDE
                   value={updatedDescription}
@@ -158,7 +168,7 @@ const Admin = () => {
                 <button onClick={handleCloseModal} className='bg-[#000000] text-white px-4 py-2 rounded-md hover:bg-red-600'>
                   Cancel
                 </button>
-                <button onClick={handleArticleUpdate} className='bg-[#FA2E56] text-white px-4 py-2 rounded-md hover:bg-#FA2E56'>
+                <button onClick={handleArticleUpdate} className='bg-[#FA2E56] text-white px-4 py-2 rounded-md hover:bg-[#FA2E56]'>
                   Save Changes
                 </button>
               </div>
@@ -170,4 +180,4 @@ const Admin = () => {
   );
 };
 
-export default auth(Admin);
+export default auth(Dashboard);

@@ -1,7 +1,6 @@
-// File: Home.tsx
 "use client"
 import React from "react";
-import User from "@/app/user/index";
+import User from "@/app/user/articles/page";
 
 const Home: React.FC = () => {
   return (

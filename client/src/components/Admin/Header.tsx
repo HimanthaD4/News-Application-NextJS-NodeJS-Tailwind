@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -19,10 +20,10 @@ const Header: React.FC<HeaderProps> = ({ adminName }) => {
     const authenticate = async () => {
       const loggedIn = await isLogin();
 
-      if (loggedIn.auth) {
-        setAdmin(loggedIn.data);
-      } else {
+      if (!loggedIn) {
         router.push("/admin/login");
+      } else {
+        setAdmin(loggedIn.data);
       }
     };
 
